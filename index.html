@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mz Music</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" href="mzmusic.png" type="image/x-icon">
+    <!-- Added Google Fonts for sleek, unique typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+        }
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Theme toggle animation effects */
+        .toggle-circle {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .toggle-circle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .toggle-circle:hover::before {
+            transform: translateX(100%);
+        }
+        
+        #theme-toggle-container {
+            cursor: pointer;
+        }
+        
+        /* Pulsating effect for dark mode */
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            70% { box-shadow: 0 0 0 5px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+        
+        .dark .toggle-circle {
+            animation: pulse-glow 2s infinite;
+        }
+    </style>
+</head>
+<body class="dark:bg-gray-900 transition-colors duration-300 overflow-y-hidden">
+    <!-- Hidden YouTube Player -->
+    <div id="player" style="position: absolute; left: -9999px;"></div>
+    <div class="container mx-auto px-4 py-8">
+        <!-- Enhanced Navbar with Navigation Links -->
+        <header class="flex flex-row justify-between items-center mb-8 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg sticky top-0 z-10 backdrop-blur-sm bg-opacity-80 dark:bg-opacity-80">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold gradient-text" style="font-family:sans-serif;">Mz<span class="gradient-text">Music</span></h1>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#" class="px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</a>
+                <a href="#" class="px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Library</a>
+                <a href="#" class="px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Playlists</a>
+            </nav>
+            
+            <div class="flex items-center gap-3">
+                <div class="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full overflow-hidden" id="theme-toggle-container">
+                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-400 dark:from-indigo-700 dark:via-purple-700 dark:to-pink-600 transition-all duration-300 rounded-full"></div>
+                    <div class="absolute inset-0.5 bg-white dark:bg-gray-800 rounded-full transition-all duration-300"></div>
+                    <div class="absolute inset-1 flex items-center justify-between">
+                        <i class="fas fa-sun text-yellow-400 text-xs ml-0.5"></i>
+                        <i class="fas fa-moon text-indigo-300 text-xs mr-0.5"></i>
+                    </div>
+                    <div class="toggle-circle absolute left-1 top-1 bg-gradient-to-r from-yellow-300 to-yellow-400 dark:from-indigo-400 dark:to-purple-500 w-4 h-4 rounded-full transition-transform duration-300 ease-in-out transform dark:translate-x-6 shadow-md z-10 flex items-center justify-center">
+                        <i class="fas fa-sun text-white text-[8px] dark:hidden"></i>
+                        <i class="fas fa-moon text-white text-[8px] hidden dark:block"></i>
+                    </div>
+                    <input type="checkbox" id="theme-toggle" class="sr-only" aria-label="Toggle dark mode">
+                </div>
+                <!-- Mobile menu button -->
+                <button class="md:hidden p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-all duration-200">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Section with Centered Search -->
+        <div class="hero-section mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-800 dark:text-white">
+                    Listen to your favourite music in <span class="gradient-text">Mz Music</span>
+                </h2>
+                <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Search, discover, and enjoy millions of songs with our powerful music player
+                </p>
+            </div>
+            
+            <!-- Centered Search Bar -->
+            <div class="w-full max-w-xl mx-auto transition-all duration-300">
+                <div class="flex flex-col sm:flex-row items-center">
+                    <div class="relative flex-1 w-full mb-2 sm:mb-0 search-input-container">
+                        <div id="search-input-wrapper" class="relative">
+                            <input type="text" id="search-input" placeholder="Search for songs..." 
+                                class="w-full px-3 py-2 pr-10 rounded-full border border-gray-300 dark:border-gray-600 
+                                bg-transparent text-gray-800 dark:text-white focus:outline-none 
+                                transition-all text-base shadow-sm">
+                            <button id="clear-search" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="search-button" class="ml-0 sm:ml-2 px-4 py-2 text-white bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-700 rounded-full transition-colors shadow-sm">
+                        <i class="fas fa-search mr-1"></i> Search
+                    </button>
+                </div>
+                
+                <!-- Search Status -->
+                <div id="search-status" class="mt-2 text-xs text-gray-500 dark:text-gray-400 hidden">
+                    <i class="fas fa-circle-info mr-1"></i>
+                    <span id="status-text">Searching...</span>
+                </div>
+                
+                <!-- Search Results Container (Hidden initially) -->
+                <div id="search-results" class="mt-4 hidden bg-transparent dark:bg-gray-800 rounded-lg  p-4">
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Search Results</h3>
+                    <div id="results-list" class="max-h-80 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Debug Container (Hidden by default) -->
+        <div id="debug-container" class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg hidden mb-24">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Debug Info</h3>
+            <div class="mb-2">
+                <button id="check-api" class="text-sm px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-md hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">
+                    Check YouTube API
+                </button>
+                <button id="test-search" class="text-sm ml-2 px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-md hover:bg-green-200 dark:hover:bg-green-800 transition-colors">
+                    Test Search
+                </button>
+                <button id="clear-debug" class="text-sm ml-2 px-3 py-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-md hover:bg-red-200 dark:hover:bg-red-800 transition-colors">
+                    Clear Log
+                </button>
+            </div>
+            <div id="debug-log" class="text-sm text-gray-700 dark:text-gray-300 overflow-y-auto max-h-40 bg-gray-100 dark:bg-gray-700 p-3 rounded"></div>
+        </div>
+    </div>
+
+    <!-- Mini Player (Fixed at the bottom) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-30 transition-all duration-300 border-t border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-2">
+                <!-- Track Info with Album Art -->
+                <div class="flex items-center flex-1 min-w-0 mr-4">
+                    <div class="w-12 h-12 rounded-lg overflow-hidden shadow-md mr-3 flex-shrink-0" id="album-art-container">
+                        <img id="album-art" src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop" alt="Album Cover" class="w-full h-full object-cover">
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h3 id="song-title" class="text-sm font-semibold text-gray-800 dark:text-white truncate">Song Title</h3>
+                        <p id="artist-name" class="text-xs text-gray-600 dark:text-gray-400 truncate">Artist Name</p>
+                    </div>
+                </div>
+                
+                <!-- Controls -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <button class="control-btn text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors hidden sm:block" id="shuffle-btn">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button class="control-btn text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" id="prev-btn">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="control-btn bg-indigo-600 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-indigo-700 transition-colors" id="play-btn">
+                        <i class="fas fa-play text-xs"></i>
+                    </button>
+                    <button class="control-btn text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" id="next-btn">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button class="control-btn text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors hidden sm:block" id="repeat-btn">
+                        <i class="fas fa-repeat"></i>
+                    </button>
+                </div>
+                
+                <!-- Progress and Volume (Shows on medium screens and up) -->
+                <div class="hidden md:flex items-center flex-1 ml-4">
+                    <span id="current-time" class="text-xs text-gray-600 dark:text-gray-400 mr-2">0:00</span>
+                    <div class="h-1 bg-gray-200 dark:bg-gray-700 rounded-full flex-1 relative">
+                        <div id="progress-bar" class="h-full bg-indigo-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <span id="total-time" class="text-xs text-gray-600 dark:text-gray-400 ml-2">0:00</span>
+                    
+                    <div class="flex items-center ml-4 gap-1">
+                        <i class="fas fa-volume-down text-gray-600 dark:text-gray-400 text-xs"></i>
+                        <input type="range" id="volume-slider" min="0" max="100" value="80" class="w-20 accent-indigo-600">
+                    </div>
+                </div>
+                
+                <!-- Expand Button -->
+                <button id="expand-player" class="ml-2 text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            
+            <!-- Progress Bar for Small Screens -->
+            <div class="h-1 bg-gray-200 dark:bg-gray-700 md:hidden">
+                <div id="progress-bar-mobile" class="h-full bg-indigo-500" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Expanded Player (Hidden by default) -->
+    <div id="expanded-player" class="fixed inset-0 bg-white dark:bg-gray-900 z-40 hidden flex flex-col items-center justify-center">
+        <div class="container mx-auto px-4 py-8 max-w-2xl">
+            <!-- Close Button -->
+            <button id="close-expanded-player" class="absolute top-4 right-4 text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <!-- Album Art -->
+            <div class="w-64 h-64 mx-auto rounded-lg overflow-hidden shadow-2xl mb-8">
+                <img id="expanded-album-art" src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop" alt="Album Cover" class="w-full h-full object-cover">
+            </div>
+            
+            <!-- Track Info -->
+            <div class="text-center mb-8">
+                <h2 id="expanded-song-title" class="text-2xl font-bold text-gray-800 dark:text-white mb-1">Song Title</h2>
+                <p id="expanded-artist-name" class="text-gray-600 dark:text-gray-400">Artist Name</p>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="w-full mb-4">
+                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
+                    <span id="expanded-current-time">0:00</span>
+                    <span id="expanded-total-time">0:00</span>
+                </div>
+                <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full">
+                    <div id="expanded-progress-bar" class="h-full bg-indigo-500 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <!-- Controls -->
+            <div class="flex justify-center items-center gap-8 mb-8">
+                <button class="control-btn text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" id="expanded-shuffle-btn">
+                    <i class="fas fa-random text-xl"></i>
+                </button>
+                <button class="control-btn text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" id="expanded-prev-btn">
+                    <i class="fas fa-step-backward text-2xl"></i>
+                </button>
+                <button class="control-btn bg-indigo-600 text-white rounded-full w-16 h-16 flex items-center justify-center hover:bg-indigo-700 transition-colors" id="expanded-play-btn">
+                    <i class="fas fa-play text-xl"></i>
+                </button>
+                <button class="control-btn text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" id="expanded-next-btn">
+                    <i class="fas fa-step-forward text-2xl"></i>
+                </button>
+                <button class="control-btn text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" id="expanded-repeat-btn">
+                    <i class="fas fa-repeat text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Volume Control -->
+            <div class="flex items-center gap-2 justify-center">
+                <i class="fas fa-volume-down text-gray-600 dark:text-gray-400"></i>
+                <div class="w-48">
+                    <input type="range" id="expanded-volume-slider" min="0" max="100" value="80" class="w-full accent-indigo-600">
+                </div>
+                <i class="fas fa-volume-up text-gray-600 dark:text-gray-400"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Control Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const debugContainer = document.getElementById('debug-container');
+            const debugToggle = document.getElementById('debug-toggle');
+            const debugLog = document.getElementById('debug-log');
+            const checkApiBtn = document.getElementById('check-api');
+            const testSearchBtn = document.getElementById('test-search');
+            const clearDebugBtn = document.getElementById('clear-debug');
+            
+            // Toggle debug panel
+            debugToggle.addEventListener('click', function() {
+                debugContainer.classList.toggle('hidden');
+            });
+            
+            // Also toggle with Ctrl+Shift+D
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                    debugContainer.classList.toggle('hidden');
+                }
+            });
+            
+            // Check API button handler
+            checkApiBtn.addEventListener('click', function() {
+                const log = document.createElement('div');
+                log.className = 'log-item';
+                log.textContent = '[CHECK] Testing YouTube API...';
+                debugLog.appendChild(log);
+                
+                fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=dQw4w9WgXcQ&key=AIzaSyBKyfBYM55sZ5z_J8xNNaMZNQYlmnuU1ys`)
+                    .then(response => {
+                        const statusLog = document.createElement('div');
+                        if (response.ok) {
+                            statusLog.className = 'log-item text-green-500';
+                            statusLog.textContent = `[SUCCESS] API responded with status ${response.status}`;
+                        } else {
+                            statusLog.className = 'log-item text-red-500';
+                            statusLog.textContent = `[ERROR] API responded with status ${response.status}`;
+                        }
+                        debugLog.appendChild(statusLog);
+                        return response.json();
+                    })
+                    .then(data => {
+                        const dataLog = document.createElement('div');
+                        dataLog.className = 'log-item';
+                        dataLog.textContent = `[DATA] ${JSON.stringify(data).substring(0, 100)}...`;
+                        debugLog.appendChild(dataLog);
+                    })
+                    .catch(error => {
+                        const errorLog = document.createElement('div');
+                        errorLog.className = 'log-item text-red-500';
+                        errorLog.textContent = `[ERROR] ${error.message}`;
+                        debugLog.appendChild(errorLog);
+                    });
+            });
+            
+            // Test search button handler
+            testSearchBtn.addEventListener('click', function() {
+                const searchInput = document.getElementById('search-input');
+                searchInput.value = 'test song';
+                document.getElementById('search-button').click();
+            });
+            
+            // Clear debug log
+            clearDebugBtn.addEventListener('click', function() {
+                debugLog.innerHTML = '';
+            });
+            
+            // Custom console.log to capture logs in debug panel
+            const originalLog = console.log;
+            const originalError = console.error;
+            const originalWarning = console.warn;
+            
+            console.log = function() {
+                if (debugLog) {
+                    const args = Array.from(arguments);
+                    const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' ');
+                    const logItem = document.createElement('div');
+                    logItem.className = 'log-item';
+                    logItem.textContent = `[LOG] ${message}`;
+                    debugLog.appendChild(logItem);
+                    debugLog.scrollTop = debugLog.scrollHeight;
+                }
+                originalLog.apply(console, arguments);
+            };
+            
+            console.error = function() {
+                if (debugLog) {
+                    const args = Array.from(arguments);
+                    const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' ');
+                    const logItem = document.createElement('div');
+                    logItem.className = 'log-item text-red-500';
+                    logItem.textContent = `[ERROR] ${message}`;
+                    debugLog.appendChild(logItem);
+                    debugLog.scrollTop = debugLog.scrollHeight;
+                }
+                originalError.apply(console, arguments);
+            };
+            
+            console.warn = function() {
+                if (debugLog) {
+                    const args = Array.from(arguments);
+                    const message = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' ');
+                    const logItem = document.createElement('div');
+                    logItem.className = 'log-item text-yellow-500';
+                    logItem.textContent = `[WARN] ${message}`;
+                    debugLog.appendChild(logItem);
+                    debugLog.scrollTop = debugLog.scrollHeight;
+                }
+                originalWarning.apply(console, arguments);
+            };
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="js/youtube-api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

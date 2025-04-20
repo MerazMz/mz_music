@@ -1,0 +1,396 @@
+/* Custom styles for Mz Music Player */
+
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --surface-light: #ffffff;
+    --surface-dark: #1f2937;
+    --text-light: #111827;
+    --text-dark: #f9fafb;
+    --secondary-light: #9ca3af;
+    --secondary-dark: #6b7280;
+}
+
+/* Dark mode styles */
+.dark {
+    color-scheme: dark;
+    background-color: var(--surface-dark);
+    color: var(--text-dark);
+}
+
+/* Global text colors */
+body {
+    color: var(--text-light);
+    background-color: var(--surface-light);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+    color: var(--text-dark);
+    background-color: var(--surface-dark);
+}
+
+/* Ensure proper text contrast in dark mode */
+.dark .text-gray-600,
+.dark .text-gray-700,
+.dark .text-gray-800 {
+    color: var(--text-dark);
+}
+
+.dark .text-gray-400,
+.dark .text-gray-500 {
+    color: var(--secondary-light);
+}
+
+/* Background colors in dark mode */
+.dark .bg-white {
+    background-color: var(--surface-dark);
+}
+
+.dark .bg-gray-100 {
+    background-color: #374151;
+}
+
+/* Navbar styles */
+.text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+header nav a {
+    position: relative;
+    font-weight: 500;
+}
+
+header nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: white;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+header nav a:hover::after {
+    width: 70%;
+}
+
+
+/* Custom player styles */
+#album-art-container {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+#album-art-container:hover {
+    transform: scale(1.03);
+}
+
+/* Custom range input styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 5px;
+    background: #e5e7eb;
+    outline: none;
+}
+
+.dark input[type="range"] {
+    background: #374151;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    border: none;
+}
+
+/* Search results styling */
+.result-item {
+    position: relative;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.result-item:hover {
+    transform: translateX(5px);
+}
+
+.result-item .add-to-playlist {
+    transition: all 0.2s ease;
+}
+
+.result-item:hover .add-to-playlist {
+    transform: scale(1.1);
+}
+
+/* Playlist item hover effect */
+.playlist-item {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.playlist-item:hover {
+    background-color: #f3f4f6;
+    transform: translateX(5px);
+}
+
+.dark .playlist-item:hover {
+    background-color: #374151;
+}
+
+/* Remove button visibility on hover */
+.playlist-item .remove-track {
+    opacity: 0;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.playlist-item:hover .remove-track {
+    opacity: 1;
+}
+
+/* Active playlist item */
+.playlist-item.active {
+    border-left: 3px solid var(--primary);
+    background-color: rgba(99, 102, 241, 0.1);
+    padding-left: 12px;
+}
+
+.dark .playlist-item.active {
+    background-color: rgba(99, 102, 241, 0.2);
+}
+
+/* Animation for playing state */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.playing #album-art-container {
+    animation: pulse 2s infinite;
+}
+
+/* Animation for equalizer bars */
+.equalizer {
+    display: flex;
+    align-items: flex-end;
+    height: 16px;
+    gap: 2px;
+}
+
+.equalizer-bar {
+    width: 3px;
+    background-color: var(--primary);
+    border-radius: 1px;
+    transition: height 0.2s ease;
+}
+
+/* Neon search box gradient effect */
+@keyframes rotate-gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes pulse-glow {
+    0% {
+        filter: blur(4px) brightness(1.2) contrast(1.2);
+        box-shadow: 0 0 5px 2px rgba(255, 0, 204, 0.5), 
+                    0 0 10px 4px rgba(51, 0, 255, 0.3);
+    }
+    50% {
+        filter: blur(5px) brightness(1.5) contrast(1.3);
+        box-shadow: 0 0 10px 3px rgba(255, 0, 204, 0.7), 
+                    0 0 15px 6px rgba(51, 0, 255, 0.5);
+    }
+    100% {
+        filter: blur(4px) brightness(1.2) contrast(1.2);
+        box-shadow: 0 0 5px 2px rgba(255, 0, 204, 0.5), 
+                    0 0 10px 4px rgba(51, 0, 255, 0.3);
+    }
+}
+
+.search-input-container {
+    position: relative;
+    transition: transform 0.3s ease;
+    z-index: 1;
+}
+
+.search-input-container::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #ff00cc, #3300ff, #00ffff, #ff00cc);
+    background-size: 300% 300%;
+    animation: rotate-gradient 3s ease infinite, pulse-glow 2s ease-in-out infinite;
+    z-index: -1;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+/* Light mode specific adjustments */
+.search-input-container::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.15);
+    z-index: -2;
+    box-shadow: 0 0 15px 5px rgba(99, 102, 241, 0.5);
+}
+
+/* Dark mode adjustments */
+.dark .search-input-container::before {
+    opacity: 0.9;
+    animation: rotate-gradient 3s ease infinite, pulse-glow 2s ease-in-out infinite;
+}
+
+.dark .search-input-container::after {
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px 8px rgba(99, 102, 241, 0.6);
+}
+
+.search-input-container:focus-within::before {
+    opacity: 1;
+    background-size: 200% 200%;
+    animation: rotate-gradient 2s ease infinite, pulse-glow 1.5s ease-in-out infinite;
+}
+
+/* Search input focus effect */
+#search-input:focus {
+    box-shadow: none;
+    border-color: transparent;
+}
+
+#search-input-wrapper {
+    position: relative;
+    border-radius: 9999px;
+    overflow: hidden;
+    z-index: 2;
+    background-color: var(--surface-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dark #search-input-wrapper {
+    background-color: var(--surface-dark);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.search-input-container:focus-within #search-input-wrapper {
+    transform: scale(1.01);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.dark .search-input-container:focus-within #search-input-wrapper {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Custom animations for search container */
+.search-input-container:focus-within {
+    transform: translateY(-2px);
+}
+
+/* Make the input border subtle */
+#search-input {
+    border-color: rgba(156, 163, 175, 0.2);
+    transition: all 0.3s ease;
+}
+
+.dark #search-input {
+    border-color: rgba(75, 85, 99, 0.2);
+}
+
+/* Button hover animations */
+.control-btn:hover, 
+#search-button:hover, 
+#clear-playlist:hover,
+#save-playlist:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+}
+
+.control-btn:active, 
+#search-button:active, 
+#clear-playlist:active,
+#save-playlist:active {
+    transform: translateY(0);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: #374151;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c5c5c5;
+    border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* Responsive font sizes */
+@media (max-width: 640px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    #song-title {
+        font-size: 1.25rem;
+    }
+}
