@@ -429,8 +429,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const toggleContainer = document.getElementById('theme-toggle-container');
             const toggleCircle = toggleContainer.querySelector('.toggle-circle');
             const body = document.body;
+            const gradientContainers = document.querySelectorAll('.gradient-text-container');
+            const gradientTexts = document.querySelectorAll('.gradient-text');
             
-            if (document.documentElement.classList.contains('dark')) {
+            // Store text content for data-text attribute
+            gradientTexts.forEach(text => {
+                if (!text.hasAttribute('data-text')) {
+                    text.setAttribute('data-text', text.textContent);
+                }
+            });
+            
+            // Add transition classes for swipe effect
+            gradientContainers.forEach(container => {
+                container.classList.add('theme-transitioning');
+            });
+            
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            
+            // Add appropriate swipe direction class
+            gradientTexts.forEach(text => {
+                if (isDarkMode) {
+                    text.classList.add('to-light');
+                    text.classList.remove('to-dark');
+                } else {
+                    text.classList.add('to-dark');
+                    text.classList.remove('to-light');
+                }
+            });
+            
+            if (isDarkMode) {
                 // Switch to light mode with animation
                 gsap.to(toggleCircle, {
                     translateX: 0,
@@ -445,6 +472,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     ease: 'power2.out',
                     onComplete: () => {
                         document.documentElement.classList.remove('dark');
+                        
+                        // Clean up transition classes after animation completes
+                        setTimeout(() => {
+                            gradientContainers.forEach(container => {
+                                container.classList.remove('theme-transitioning');
+                            });
+                            gradientTexts.forEach(text => {
+                                text.classList.remove('to-light');
+                            });
+                        }, 800);
                     }
                 });
                 
@@ -464,6 +501,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     ease: 'power2.out',
                     onComplete: () => {
                         document.documentElement.classList.add('dark');
+                        
+                        // Clean up transition classes after animation completes
+                        setTimeout(() => {
+                            gradientContainers.forEach(container => {
+                                container.classList.remove('theme-transitioning');
+                            });
+                            gradientTexts.forEach(text => {
+                                text.classList.remove('to-dark');
+                            });
+                        }, 800);
                     }
                 });
                 
@@ -586,7 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add each result to the list
             results.forEach(result => {
                 const resultItem = document.createElement('div');
-                resultItem.className = 'search-result flex items-center p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors my-1 cursor-pointer';
+                resultItem.className = 'search-result flex items-center p-3 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-md transition-colors my-1 cursor-pointer';
                 
                 resultItem.innerHTML = `
                     <div class="w-12 h-12 mr-3">
@@ -596,8 +643,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="text-sm font-medium text-gray-800 dark:text-white truncate">${result.title}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400 truncate">${result.channelTitle || 'Unknown artist'}</p>
                     </div>
-                    <button class="play-now-btn bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 p-2 rounded-full hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors">
-                        <i class="fas fa-play"></i>
+                    <button class="play-now-btn dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 p-2 rounded-full hover:bg-indigo-500 dark:hover:bg-indigo-800 transition-colors">
+        
                     </button>
                 `;
                 
@@ -673,6 +720,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
             const toggleContainer = document.getElementById('theme-toggle-container');
             const toggleCircle = toggleContainer.querySelector('.toggle-circle');
+            const gradientTexts = document.querySelectorAll('.gradient-text');
+            
+            // Set data-text attributes for swipe effect
+            gradientTexts.forEach(text => {
+                text.setAttribute('data-text', text.textContent);
+            });
             
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -714,16 +767,50 @@ document.addEventListener('DOMContentLoaded', () => {
             loadYouTubeAPI();
             
             // Add basic player event listeners
-            playBtn.addEventListener('click', togglePlay);
-            prevBtn.addEventListener('click', playPrevTrack);
-            nextBtn.addEventListener('click', playNextTrack);
-            shuffleBtn.addEventListener('click', toggleShuffle);
-            repeatBtn.addEventListener('click', toggleRepeat);
-            document.getElementById('current-time').parentElement.addEventListener('click', setProgress);
+            playBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent expandPlayer from being triggered
+                togglePlay();
+            });
+            prevBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent expandPlayer from being triggered
+                playPrevTrack();
+            });
+            nextBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent expandPlayer from being triggered
+                playNextTrack();
+            });
+            shuffleBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent expandPlayer from being triggered
+                toggleShuffle();
+            });
+            repeatBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent expandPlayer from being triggered
+                toggleRepeat();
+            });
+            
+            // Progress and volume controls should not trigger expand
+            const progressContainer = document.getElementById('current-time').parentElement;
+            if (progressContainer) {
+                progressContainer.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent expandPlayer from being triggered
+                    setProgress(e);
+                });
+            }
+            
+            const volumeControl = document.querySelector('.flex.items-center.ml-4.gap-1');
+            if (volumeControl) {
+                volumeControl.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent expandPlayer from being triggered
+                });
+            }
+            
+            // Make the entire mini player clickable to expand
+            const miniPlayer = document.getElementById('mini-player');
+            miniPlayer.addEventListener('click', expandPlayer);
+            
             document.getElementById('theme-toggle-container').addEventListener('click', toggleTheme);
             
             // Expanded player event listeners
-            expandPlayerBtn.addEventListener('click', expandPlayer);
             closeExpandedPlayerBtn.addEventListener('click', closeExpandedPlayer);
             expandedPlayBtn.addEventListener('click', togglePlay);
             expandedPrevBtn.addEventListener('click', playPrevTrack);

@@ -283,7 +283,6 @@ input[type="range"]::-moz-range-thumb {
 
 .dark .search-input-container::after {
     background: rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 20px 8px rgba(99, 102, 241, 0.6);
 }
 
 .search-input-container:focus-within::before {
@@ -393,4 +392,158 @@ input[type="range"]::-moz-range-thumb {
     #song-title {
         font-size: 1.25rem;
     }
+}
+
+/* Mini player expand styling */
+#mini-player {
+    position: relative;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#mini-player:hover {
+    background-color: rgba(99, 102, 241, 0.05);
+}
+
+#mini-player:active {
+    transform: scale(0.99);
+}
+
+/* Small indicator that shows the player is expandable */
+#mini-player::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 4px;
+    background-color: rgba(156, 163, 175, 0.3);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+#mini-player:hover::after {
+    background-color: rgba(99, 102, 241, 0.4);
+    width: 40px;
+}
+
+.dark #mini-player::after {
+    background-color: rgba(75, 85, 99, 0.4);
+}
+
+.dark #mini-player:hover::after {
+    background-color: rgba(99, 102, 241, 0.5);
+}
+
+/* Gradient text styling with swipe transition */
+.gradient-text {
+    position: relative;
+    background-image: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    animation: subtle-move 8s ease infinite;
+    display: inline-block;
+}
+
+/* Light mode gradient animation */
+@keyframes subtle-move {
+    0% {
+        background-position: 0% center;
+    }
+    50% {
+        background-position: 100% center;
+    }
+    100% {
+        background-position: 0% center;
+    }
+}
+
+/* Dark mode gradient with different colors */
+.dark .gradient-text {
+    background-image: linear-gradient(to right, #10b981, #3b82f6, #8b5cf6);
+    background-size: 200% auto;
+    animation: dark-move 8s ease infinite;
+}
+
+@keyframes dark-move {
+    0% {
+        background-position: 0% center;
+    }
+    50% {
+        background-position: 100% center;
+    }
+    100% {
+        background-position: 0% center;
+    }
+}
+
+/* Swipe effect for theme transition */
+.gradient-text::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    color: transparent;
+    overflow: hidden;
+    white-space: nowrap;
+    -webkit-background-clip: text;
+    background-clip: text;
+    transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1;
+}
+
+/* Light to dark swipe */
+.gradient-text.to-dark::before {
+    background-image: linear-gradient(to right, #10b981, #3b82f6, #8b5cf6);
+    width: 100%;
+}
+
+/* Dark to light swipe */
+.gradient-text.to-light::before {
+    background-image: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+    width: 100%;
+}
+
+/* Add transition container styling */
+.gradient-text-container {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+/* Add effect when theme is transitioning */
+.theme-transitioning .gradient-text-container {
+    overflow: visible;
+}
+
+/* Sparkle effect for theme transition */
+@keyframes sparkle-glow {
+    0%, 100% {
+        filter: blur(10px) brightness(1);
+        transform: scale(1);
+    }
+    50% {
+        filter: blur(15px) brightness(1.5);
+        transform: scale(1.05);
+    }
+}
+
+.theme-transitioning .gradient-text-container::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: inherit;
+    filter: blur(8px);
+    opacity: 0.7;
+    z-index: -1;
+    animation: sparkle-glow 0.8s ease-in-out;
 }

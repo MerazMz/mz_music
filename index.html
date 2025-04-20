@@ -69,21 +69,23 @@
         }
     </style>
 </head>
-<body class="dark:bg-gray-900 transition-colors duration-300 overflow-y-hidden">
+<body class="dark:bg-gray-900 transition-colors duration-300 ">
     <!-- Hidden YouTube Player -->
     <div id="player" style="position: absolute; left: -9999px;"></div>
     <div class="container mx-auto px-4 py-8">
         <!-- Enhanced Navbar with Navigation Links -->
         <header class="flex flex-row justify-between items-center mb-8 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg sticky top-0 z-10 backdrop-blur-sm bg-opacity-80 dark:bg-opacity-80">
             <div class="flex items-center">
-                <h1 class="text-2xl font-bold gradient-text" style="font-family:sans-serif;">Mz<span class="gradient-text">Music</span></h1>
+                <div class="gradient-text-container">
+                    <h1 class="text-2xl font-bold gradient-text" style="font-family:sans-serif;">Mz<span class="gradient-text">Music</span></h1>
+                </div>
             </div>
             
             <!-- Navigation Links -->
             <nav class="hidden md:flex items-center space-x-6">
                 <a href="#" class="px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</a>
-                <a href="#" class="px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Library</a>
-                <a href="#" class="px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Playlists</a>
+                <a href="#" class="px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">YouTube Playlist</a>
+                <a href="#" class="px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Spotify Playlists</a>
             </nav>
             
             <div class="flex items-center gap-3">
@@ -101,9 +103,9 @@
                     <input type="checkbox" id="theme-toggle" class="sr-only" aria-label="Toggle dark mode">
                 </div>
                 <!-- Mobile menu button -->
-                <button class="md:hidden p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-all duration-200">
+                <!-- <button class="md:hidden p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-all duration-200">
                     <i class="fas fa-bars"></i>
-                </button>
+                </button> -->
             </div>
         </header>
 
@@ -111,7 +113,7 @@
         <div class="hero-section mb-12">
             <div class="text-center mb-8">
                 <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-800 dark:text-white">
-                    Listen to your favourite music in <span class="gradient-text">Mz Music</span>
+                    Listen to your favourite music in <div class="gradient-text-container inline-block"><span class="gradient-text">Mz Music</span></div>
                 </h2>
                 <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                     Search, discover, and enjoy millions of songs with our powerful music player
@@ -132,8 +134,8 @@
                             </button>
                         </div>
                     </div>
-                    <button id="search-button" class="ml-0 sm:ml-2 px-4 py-2 text-white bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-700 rounded-full transition-colors shadow-sm">
-                        <i class="fas fa-search mr-1"></i> Search
+                    <button id="search-button" class="w-full sm:w-auto mt-2 sm:mt-0 ml-0 sm:ml-2 px-4 py-2 text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-400 dark:from-indigo-700 dark:via-purple-700 dark:to-pink-600 hover:opacity-90 rounded-full transition-colors shadow-md flex items-center justify-center">
+                        <i class="fas fa-search mr-1"></i> <span class="font-medium">Search</span>
                     </button>
                 </div>
                 
@@ -171,7 +173,7 @@
 
     <!-- Mini Player (Fixed at the bottom) -->
     <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-30 transition-all duration-300 border-t border-gray-200 dark:border-gray-700">
-        <div class="container mx-auto px-4">
+        <div id="mini-player" class="container mx-auto px-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
             <div class="flex items-center justify-between py-2">
                 <!-- Track Info with Album Art -->
                 <div class="flex items-center flex-1 min-w-0 mr-4">
@@ -216,11 +218,6 @@
                         <input type="range" id="volume-slider" min="0" max="100" value="80" class="w-20 accent-indigo-600">
                     </div>
                 </div>
-                
-                <!-- Expand Button -->
-                <button id="expand-player" class="ml-2 text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                    <i class="fas fa-chevron-up"></i>
-                </button>
             </div>
             
             <!-- Progress Bar for Small Screens -->
